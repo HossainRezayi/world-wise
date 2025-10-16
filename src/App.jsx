@@ -10,12 +10,13 @@ import CityList from "./components/CityList";
 import CountryList from "./components/CountryList";
 import City from "./components/City";
 import Form from "./components/Form";
-import { CitiesProvider } from "./contexts.jsx/CitiesContext";
+import Map from "./components/Map";
+import { CitiesProvider } from "./contexts/CitiesContext";
 
 function App() {
   return (
-    <CitiesProvider>
-      <BrowserRouter>
+    <BrowserRouter>
+      <CitiesProvider>
         <Routes>
           <Route index element={<Homepage />} />
           <Route path="product" element={<Product />} />
@@ -34,11 +35,12 @@ function App() {
               }
             />
             <Route path="form" element={<Form />} />
+            <Route path="map" element={<Map />} />
           </Route>
           <Route path="*" element={<PageNotFound />} />
         </Routes>
-      </BrowserRouter>
-    </CitiesProvider>
+      </CitiesProvider>
+    </BrowserRouter>
   );
 }
 
