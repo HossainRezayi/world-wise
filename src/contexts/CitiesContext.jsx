@@ -11,29 +11,20 @@ function CitiesProvider({ children }) {
   const [error, setError] = useState(null);
 
   useEffect(function () {
-    const controller = new AbortController();
-
     async function fetchCities() {
       try {
         setIsLoading(true);
-        setError(null);
-        const res = await fetch(`${BASE_URL}/cities`, {
-          signal: controller.signal,
-        });
+        const res = await fetch(`${BASE_URL}/cities`);
         const data = await res.json();
         setCities(data);
-      } catch (err) {
-        if (err.name !== "AbortError") {
-          console.error("There was an error loading data:", err);
-          setError(err);
-        }
+      } catch {
+        alert("There was an error loading data...");
       } finally {
         setIsLoading(false);
       }
     }
 
     fetchCities();
-    return () => controller.abort();
   }, []);
 
   async function getCity(id) {
@@ -51,9 +42,30 @@ function CitiesProvider({ children }) {
     }
   }
 
+  async function createCity(newCity) {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const res = await fetch(`${BASE_URL}/cities/`, {
+        method: "POST",
+        body: JSON.stringify(newCity),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await res.json();
+      setCities((cities) => [...cities, data]);
+    } catch (err) {
+      console.error("There was an error loading data:", err);
+      setError(err);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   return (
     <CitiesContext.Provider
-      value={{ cities, isLoading, currentCity, getCity, error }}
+      value={{ cities, isLoading, currentCity, getCity, error, createCity }}
     >
       {children}
     </CitiesContext.Provider>
